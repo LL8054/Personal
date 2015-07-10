@@ -1,0 +1,23 @@
+```{r echo=FALSE, message=FALSE}
+setwd("~/datasciencecoursera/Personal")
+require(xlsx)
+excel <- read.xlsx2("RegressionInfo.xlsx", sheetName="Sheet1")
+data <- excel[,c-1]
+colnames(data) <- c("Math", "Reading")
+data <- data[-1,]
+R <- paste(data[,2])
+M <- paste(data[,1])
+data[,1] <- as.numeric(M)
+data[,2] <- as.numeric(R)
+```
+
+```{r echo=FALSE}
+reading <- data[,2]
+math <- data[,1]
+```
+
+```{r echo=FALSE}
+fit1 <- lm(math~reading, data)
+plot(x=reading, y=math, xlab="Reading", ylab="Math", main="Scores")
+abline(fit1)
+```

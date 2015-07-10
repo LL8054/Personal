@@ -1,0 +1,58 @@
+```{r echo=FALSE, message=FALSE}
+setwd("~/datasciencecoursera/Personal")
+require(xlsx)
+excel <- read.xlsx2("HL.xlsx", sheetName="Sheet1")
+data <- excel[-41,-1]
+data[,1] <- as.numeric(paste(data[,1]))
+data[,2] <- as.numeric(paste(data[,2]))
+data[,3] <- as.numeric(paste(data[,3]))
+data[,4] <- as.numeric(paste(data[,4]))
+data[9,4] <- as.numeric(100)
+
+fitRtoDDpct <- lm(Reading~DIBELS + DIBELSpct, data)  ## R = .8456
+fitRtoD <- lm(Reading~DIBELS, data) ## R = .84
+fitMtoDDpct <- lm(Math~DIBELS + DIBELSpct, data) ## R = .746
+fitMtoD <- lm(Math~DIBELS, data) ## R = .727
+fitMtoR <- lm(Math~Reading, data) ## R = .759
+fitDpcttoD <- lm(DIBELSpct~DIBELS, data)  ## R = .977
+fitRtoDpct <- lm(Reading~DIBELSpct, data) ## R = .84
+
+plot(data$DIBELS, data$Reading, xlab="DIBELS", ylab="Reading")
+abline(fitRtoD, col="blue")
+
+plot(data$DIBELS, data$Math, xlab="DIBELS", ylab="Math")
+abline(fitMtoD, col="red")
+
+plot(data$Reading, data$Math, xlab="Reading", ylab="Math")
+abline(fitMtoR, col="green")
+```
+
+```{r echo=FALSE, message=FALSE}
+excel2 <- read.xlsx2("OC.xlsx", sheetName="Sheet1")
+data2 <- excel2[,-1]
+data2[,1] <- as.numeric(paste(data2[,1]))
+data2[,2] <- as.numeric(paste(data2[,2]))
+data2[c(21,22),2] <- as.numeric(paste(0))
+data2 <- data2[c(-7,-22,-23,-34),]
+
+summary(fitMtoDDpct)
+```
+
+Math Score = 38.582722 - .005049(DIBELS) + .619613(DIBELSpct)
+
+```{r echo=FALSE}
+for (i in 1:nrow(data2)) {
+        data2[i,3] <- 38.582722 - .005049 * data2[i,1] + .619613 * data2[i,2]
+}
+
+pass = 0
+fail = 0
+for (i in 1:nrow(data2)) {
+    if (data2[i,3] > 59) {pass <- pass + 1}
+    else {fail <- fail + 1}
+}
+```
+
+number of passing:  `r pass` <br>
+number of failing: `r fail`<br>
+percentage passing:  `r round(pass/(pass + fail),2)`
