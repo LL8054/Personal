@@ -2,9 +2,10 @@ setwd("~/datasciencecoursera/Personal")
 
 library("XLConnect")
 library("dplyr")
-library(tidyr)
+library("tidyr")
+library("xlsx")
 
-wb <- loadWorkbook("gradespopsrally.xlsx")
+wb <- XLConnect::loadWorkbook("gradespopsrally.xlsx")
 rawdata <- readWorksheet(wb, sheet = "gradespopsrally")
 
 #create name key
